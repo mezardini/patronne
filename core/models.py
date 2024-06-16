@@ -89,7 +89,7 @@ class Customer(models.Model):
 class Transaction(models.Model):
     transaction_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     datetime_added = models.DateTimeField(auto_now_add=True)
-    customer = models.ForeignKey(Customer, related_name='transaction_patron', on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, related_name='transaction_patron', on_delete=models.SET_NULL, null=True)
     restaurant = models.ForeignKey(Restaurant, related_name='transaction_restaurant', on_delete=models.CASCADE)
     items_ordered = models.JSONField(default=list)
     total_fee = models.FloatField()
