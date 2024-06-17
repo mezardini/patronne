@@ -91,3 +91,12 @@ class LoginUserView(viewsets.ModelViewSet):
         else:
             # If the serializer is not valid, return the errors
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutUserView(viewsets.ViewSet):
+    def create(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            auth.logout(request)
+            return Response({'detail': 'User logged out successfully!'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'detail': 'No user is logged in!'}, status=status.HTTP_400_BAD_REQUEST)
