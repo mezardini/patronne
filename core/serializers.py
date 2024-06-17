@@ -5,7 +5,7 @@ from .models import CustomUser as User, Customer, Restaurant, Transaction
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['email', 'password']
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
@@ -24,3 +24,8 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
