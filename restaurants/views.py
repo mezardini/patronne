@@ -7,8 +7,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-from restaurants.models import Restaurant
+from .models import Restaurant
 from restaurants.serializers import RestaurantSerializer
+from patrons.models import Customer
 # Create your views here.
 
 
@@ -42,3 +43,15 @@ class RestaurantView(viewsets.ModelViewSet):
         else:
             # If the serializer is not valid, return the errors
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomerView(viewsets.ReadOnlyModelViewSet):
+    queryset = Customer.objects.select_related().all()
+    
+    serializer_class = RestaurantSerializer
+
+    def list(self, request, *args, **kwargs):
+        restaurantX = Restaurant.objects.get(owner=request.user)
+        queryset = self.get_queryset().filter(restaurant=restaurantX)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

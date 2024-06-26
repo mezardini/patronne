@@ -3,13 +3,14 @@ from django.urls import path, include
 
 from rest_framework import routers
 from core.views import UserView, CreateUserView, LoginUserView, LogoutUserView
-from restaurants.views import RestaurantView
+from restaurants.views import RestaurantView, CustomerView
 
 # create a router object
 router = routers.DefaultRouter()
 
 # register the router
 router.register(r'restaurants', RestaurantView, 'view_restaurant')
+router.register(r'customers', CustomerView, 'view_customer')
 router.register(r'users', UserView, 'view_user')
 router.register(r'create-user', CreateUserView, 'view_create-user')
 router.register(r'login-user', LoginUserView, 'view_login-user')
