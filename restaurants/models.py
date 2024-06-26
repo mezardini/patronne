@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import CustomUser
+# from core.models import CustomUser
 
 # Create your models here.
 
@@ -14,7 +14,10 @@ class Restaurant(models.Model):
     minimum_order_value = models.IntegerField()
     maximum_points_per_order = models.IntegerField()
     owner = models.ForeignKey(
-        CustomUser, related_name='patron', on_delete=models.SET_NULL, null=True)
+        'core.CustomUser', related_name='patron', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'{self.restaurant_name}'
+    
+
+
