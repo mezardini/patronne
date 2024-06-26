@@ -2,6 +2,8 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
+from patrons.models import Customer
+from restaurants.models import Restaurant
 
 
 class UserManager(BaseUserManager):
@@ -62,30 +64,30 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return f'{self.email}'
 
 
-class Restaurant(models.Model):
-    restaurant_name = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-    datetime_added = models.DateTimeField(auto_now_add=True)
-    reward_program_name = models.CharField(max_length=255)
-    reward_program_description = models.TextField()
-    points_per_dollar = models.FloatField()
-    minimum_order_value = models.IntegerField()
-    maximum_points_per_order = models.IntegerField()
-    owner = models.ForeignKey(
-        CustomUser, related_name='patron', on_delete=models.SET_NULL, null=True)
+# class Restaurant(models.Model):
+#     restaurant_name = models.CharField(max_length=255)
+#     location = models.CharField(max_length=255)
+#     datetime_added = models.DateTimeField(auto_now_add=True)
+#     reward_program_name = models.CharField(max_length=255)
+#     reward_program_description = models.TextField()
+#     points_per_dollar = models.FloatField()
+#     minimum_order_value = models.IntegerField()
+#     maximum_points_per_order = models.IntegerField()
+#     owner = models.ForeignKey(
+#         CustomUser, related_name='patron', on_delete=models.SET_NULL, null=True)
 
-    def __str__(self):
-        return f'{self.restaurant_name}'
+#     def __str__(self):
+#         return f'{self.restaurant_name}'
 
 
-class Customer(models.Model):
-    customer_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    points_balance = models.IntegerField(default=0)
-    restaurant = models.ForeignKey(Restaurant, related_name='patron', on_delete=models.CASCADE)
-    datetime_added = models.DateTimeField(auto_now_add=True)
+# class Customer(models.Model):
+#     customer_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+#     points_balance = models.IntegerField(default=0)
+#     restaurant = models.ForeignKey(Restaurant, related_name='patron', on_delete=models.CASCADE)
+#     datetime_added = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.customer_id} of {self.restaurant.restaurant_name}'
+#     def __str__(self):
+#         return f'{self.customer_id} of {self.restaurant.restaurant_name}'
 
 
 class Transaction(models.Model):
