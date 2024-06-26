@@ -10,6 +10,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from .models import Restaurant
 from restaurants.serializers import RestaurantSerializer
 from patrons.models import Customer
+from patrons.serializers import CustomerSerializer
 # Create your views here.
 
 
@@ -47,11 +48,14 @@ class RestaurantView(viewsets.ModelViewSet):
 
 class CustomerView(viewsets.ReadOnlyModelViewSet):
     queryset = Customer.objects.select_related().all()
-    
-    serializer_class = RestaurantSerializer
+
+    serializer_class = CustomerSerializer
 
     def list(self, request, *args, **kwargs):
-        restaurantX = Restaurant.objects.get(owner=request.user)
-        queryset = self.get_queryset().filter(restaurant=restaurantX)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            restaurant = Restaurant.objects.get(owner=request.user)
+            queryset = self.get_queryset().filter(restaurant=restaurant)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Restaurant.DoesNotExist:
+            return Response({"detail": "Restaurant not found."}, status=status.HTTP_404_NOT_FOUND)
