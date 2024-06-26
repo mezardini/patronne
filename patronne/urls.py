@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
-from core.views import RestaurantView, UserView, CreateUserView, LoginUserView, LogoutUserView
+from core.views import UserView, CreateUserView, LoginUserView, LogoutUserView
+from restaurants.views import RestaurantView
 
 # create a router object
 router = routers.DefaultRouter()
@@ -18,5 +19,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     # path('restaurants/', include())
-    
+
 ]

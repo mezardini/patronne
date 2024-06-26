@@ -9,8 +9,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-from .models import CustomUser as User, Customer, Restaurant, Transaction
-from .serializers import UserSerializer, CustomerSerializer, RestaurantSerializer, TransactionSerializer, LoginSerializer
+from .models import CustomUser as User,  Transaction
+from restaurants.models import Restaurant
+from patrons.models import Customer
+from .serializers import UserSerializer,  TransactionSerializer, LoginSerializer
+from restaurants.serializers import RestaurantSerializer
+from patrons.serializers import CustomerSerializer
 
 # Create your views here.
 
@@ -24,37 +28,6 @@ def customer_list(request):
     if request.method == 'GET':
         customers = Customer.objects.select_related().all()
 
-
-class RestaurantView(viewsets.ModelViewSet):
-    serializer_class = RestaurantSerializer
-    queryset = Restaurant.objects.select_related().all()
-    permission_classes_by_action = {
-        'list': [AllowAny],
-        'create': [IsAdminUser],
-        'retrieve': [IsAuthenticated],
-        'update': [IsAdminUser],
-        'destroy': [IsAuthenticated]
-    }
-
-    def get_permissions(self):
-        # Default to empty list if action is not listed in permission_classes_by_action
-        permission_classes = self.permission_classes_by_action.get(
-            self.action, [])
-        return [permission() for permission in permission_classes]
-    
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(owner=request.user)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            # If the serializer is not valid, return the errors
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

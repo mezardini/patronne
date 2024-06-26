@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser as User, Customer, Restaurant, Transaction
+from .models import CustomUser as User,  Transaction
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -8,16 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['email', 'password']
 
 
-class RestaurantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Restaurant
-        fields = '__all__'
-
-
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
 
 
 class TransactionSerializer(serializers.ModelSerializer):
